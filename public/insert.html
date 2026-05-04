@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+    <link rel="icon" type="image/png" href="/images/favicon.png"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site!"
+    />
+    <link rel="apple-touch-icon" href="images/favicon.png" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>Music4Kay</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+        <link rel="stylesheet" href="css/m4k.css">
+  </head>
+  <body>
+    <div onclick="void(0)";>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <!-- As a link -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <!-- <a class="navbar-brand" href="index.html">&nbsp;Music4Kay</a> -->
+        <a class="navbar-brand" href="index.html">&nbsp;
+          <img src="images/music.png" alt="" width="25" height="25">
+          &nbsp;Music4Kay</a>        
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="index.html">Search <span class="sr-only"></span></a>
+            <a class="nav-item nav-link active" href="insert.html">Insert</a>
+            <a class="nav-item nav-link" href="book.html">Books</a>
+            <a class="nav-item nav-link" href="status.html">Status</a>
+          </div>
+        </div>
+      </nav>
+      <p></p>
+      <div class="container" id ="musicContainer">
+        <form id="musicInput">
+        <div class="form-group row">
+            <label for="bookTitle" class="col-sm-2 col-form-label">Book Title</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="bookTitle" aria-describedby="bookHelp" placeholder="Book Title" autofocus>
+            </div>
+          </div>
+          <p></p>
+          <div class="form-group row">
+            <label for="musicTitle" class="col-sm-2 col-form-label">Music Title</label>
+            <div class="col-sm-10">
+
+            <input type="text" class="form-control" id="musicTitle" aria-describedby="musicHelp" placeholder="Music Title">
+          </div>
+          <p></p>
+          <div class="form-group row">
+            <label for="artistName" class="col-sm-2 col-form-label">Artist</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="artistName" placeholder="Artist">
+            </div>
+          </div>
+          <p></p>
+          <div class="form-group row">
+            <label for="bandName" class="col-sm-2 col-form-label">Band</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="bandName" placeholder="Band">
+            </div>
+          </div>
+          <p></p>
+          <div class="form-group row">
+            <label for="composerName" class="col-sm-2 col-form-label">Composer(s)</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="composerName" placeholder="Composer">
+            </div>
+          </div>
+          <p></p>
+          <!-- <button type="submit" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+          &nbsp;&nbsp;&nbsp; -->
+          <div class="form-group row">
+            <label class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+              <button type="submit" id="submitBtn" class="btn btn-primary">&nbsp;Insert&nbsp;</button>
+            </div>
+          </div>
+          <!-- <button type="submit" class="btn btn-primary" onclick="insertItem(event)">Insert</button> -->
+        </form>      
+      </div>
+      <hr>
+      <div class="container">
+        <p></p>
+        <p></p>
+        <pre id="msg"></pre>
+        <p></p>
+      </div>
+    </div>
+  </body>
+  <script type="text/javascript" src="js/insert.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</html>

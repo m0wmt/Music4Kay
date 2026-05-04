@@ -1,0 +1,20 @@
+Music API
+
+GET:
+/music/books get all books
+/music/books?id=5
+/music/books?title=“book title”
+/music/songs get all songs
+/music/songs?id=2
+/music/songs?title=“song title”
+/music/artists get all artists
+/music/artist?name=“artist name”
+/music/bands get all bands
+/music/bands?name=“band name”
+/music/composers get all composers
+/music/composers?name=“composer name”
+
+POST:
+/music/songs
+PUT: (Update a new song, will include book and/or artist/band/composer(s))
+/music/songs

@@ -1,0 +1,246 @@
+Directory containing work for the m4k application - a sheet music database application for Kay
+
+SQL Schema Example (https://mariadb.com/docs/server/mariadb-quickstart-guides/basics-guide)
+
+Systemd service so it runs all the time: https://forums.raspberrypi.com/viewtopic.php?t=144009, 
+called it music4kay
+sudo nano /etc/nginx/sites-available/music4kay 
+sudo nano music4kay.service
+sudo systemctl status music4kay
+sudo service music4kay start
+
+
+Set up nginx as well - 
+Default website on :80  sudo nano /etc/nginx/sites-available/default
+Check config            sudo nginx -t
+Restart nginx           sudo systemctl restart nginx
+
+Relationships
+
+    Artist–Song: One-to-Many
+    Band–Song: One-to-Many
+    Composer-Song: Many-to-Many
+    Book-Song: One-to-Many
+    Song-Book: Many-to-Many
+
+
+MariaDB: 
+    Install:
+        sudo apt install mariadb-server mariadb-client
+    Secure installation:
+        sudo mariadb-secure-installation (password)
+    Start and Verify:
+        Start the service: sudo systemctl start mariadb
+        Verify status: sudo systemctl status mariadb
+        Connect: mariadb -u root -p
+
+Create and select database.
+    CREATE DATABASE sheetmusic;
+    USE sheetmusic;
+
+Delete database.
+    DROP DATABASE sheetmusic;
+
+Create user.
+    CREATE USER 'sheetmusicuser'@'localhost' IDENTIFIED BY 'password';
+Grant user privileges.
+    GRANT ALL PRIVILEGES ON sheetmusic.* TO 'sheetmusicuser'@'localhost';
+Verify user.
+    SHOW GRANTS FOR 'sheetmusicuser'@'localhost';
+
+View structure of a table.
+    DESCRIBE table;
+
+View all tables in the database.
+    SHOW FULL TABLES;
+    SHOW TABLE STATUS;
+    
+//CREATE TABLE composer (
+//composer_id INT AUTO_INCREMENT PRIMARY KEY,
+//composername VARCHAR(255) NOT NULL UNIQUE
+//);
+
+CREATE TABLE book (
+book_id INT AUTO_INCREMENT PRIMARY KEY,
+booktitle VARCHAR(255) NOT NULL UNIQUE 
+);
+
+CREATE TABLE band (
+band_id INT AUTO_INCREMENT PRIMARY KEY,
+bandname VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE artist (
+artist_id INT AUTO_INCREMENT PRIMARY KEY,
+artistname VARCHAR(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE song (
+song_id INT AUTO_INCREMENT PRIMARY KEY,
+songtitle VARCHAR(255) NOT NULL,
+composer VARCHAR(255), 
+book_id INT,
+band_id INT,
+artist_id INT,
+FOREIGN KEY (book_id) REFERENCES book(book_id),
+FOREIGN KEY (band_id) REFERENCES band(band_id),
+FOREIGN KEY (artist_id) REFERENCES artist(artist_id)
+);
+
+//CREATE TABLE song_composer (
+//song_id INT,
+//composer_id INT,
+//PRIMARY KEY (song_id, composer_id),
+//FOREIGN KEY (song_id) REFERENCES song(song_id),
+//FOREIGN KEY (composer_id) REFERENCES composer(composer_id)
+//);
+
+CREATE TABLE song_book (
+song_id INT,
+book_id INT,
+PRIMARY KEY (song_id, book_id),
+FOREIGN KEY (song_id) REFERENCES song(song_id),
+FOREIGN KEY (book_id) REFERENCES book(book_id)
+);
+
+CREATE TABLE backup (
+    last_backup DATETIME 
+);
+INSERT INTO backup values("2025-03-12 15:08:23");
+
+Insert an item in the following order:
+    book(title), artist(name), band(name), song(title), composers(name), song_book, song_composer
+
+    INSERT INTO book(booktitle) values('50 Great Songs');
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM book;
+or
+    INSERT INTO book(booktitle) values('50 Great Songs') RETURNING book_id;
+    +---------+
+    | book_id |
+    +---------+
+    |       1 |
+    +---------+
+    1 row in set (0.005 sec)
+
+    INSERT INTO artist(artistname) values('Frank Sinatra');
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM artist;
+
+// Not in this example
+//    INSERT INTO band(bandname) values('');
+//    SELECT LAST_INSERT_ID();
+//   SELECT * FROM band;
+
+    INSERT INTO song(songtitle, book_id, band_id, artist_id) values('All The Way', 1, NULL, 1);
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM song;
+
+    INSERT INTO song_book(song_id, book_id) values(1, 1);
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM song_book;
+
+    INSERT INTO composer(composername) values('Sammy Cahn');
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM composer;
+
+    INSERT INTO composer(composername) values('Van Heusen');
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM composer;
+
+    INSERT INTO song_composer(song_id, composer_id) values(1, 1);
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM song_composer;
+
+    INSERT INTO song_composer(song_id, composer_id) values(1, 2);
+    SELECT LAST_INSERT_ID();
+    SELECT * FROM song_composer;
+
+
+
+Insert in to
+    book: 50 Great Songs
+        song: All The Way
+            artist: Frank Sinatra
+            composer: Cahn
+            composer: Van Heusen
+        song: American Pie
+            artist: Madonna
+            composer: Don McLean
+        song: Autumn From 'The Four Seasons'
+            composer: Vivaldi
+        song: Baby Elephant Walk
+            artist: Hatari!
+            composer: Mancini
+        song: Trouble
+            band: Coldplay
+        song: When I'm Sixty Four
+            band: Beatles
+            composer: John Lennon
+            composer: Paul McCartney
+        song: Hometown Glory
+            artist: Adele
+        song: Wonderwall
+            band: Oasis
+            composer: Noel Gallagher
+        song: Cabaret
+            composer: Ebb
+            composer: Kander
+
+Steps for above:
+    check if book '50 Great Songs' exists in table book
+        if yes get book id
+        if not add book and get book id (LAST_INSERT_ID())
+    check if song 'All The Way' exists in table song
+        if yes get song id
+        if not add song and get song id
+        add song+book to book_song table
+    check if artist 'Frank Sinatra' exists
+        if est get artist id
+        if not add artist and get artist id
+    check if band 'Made up Band' exists
+        if est get band id
+        if not add band and get band id
+    if we have either of both artist id and band id
+        update song id with artist id and/or band id
+    loop over composer's (can have n+1 composers to a song)
+        check if composer 'Cahn' exists in table composer
+            if yes get composer id
+            if not add composer and get composer id
+        add composer to song_composer table
+
+Setting up node.js application to test and for when it moves to the Pi
+https://mariadb.com/resources/blog/getting-started-with-connector-node-js/
+
+server.js - server!
+db.js - connection to MariaDB as sheetmusicuser
+npm start - this will run the server 
+
+To restart when changes are made install nodemon and then run the application using
+    nodemon server.js
+
+
+Search for a song backend result:
+[
+  { song_id: 1, songtitle: 'All The Way', band_id: null, artist_id: 1 }
+]
+[ { song_id: 1, book_id: 1 } ]
+[ { book_id: 1, booktitle: '50 Great Songs' } ]
+[ { artist_id: 1, artistname: 'Frank Sinatra' } ]
+Band empty!
+[ { song_id: 1, composer_id: 1 }, { song_id: 1, composer_id: 2 } ]
+[ { composer_id: 1, composername: 'Sammy Cahn' } ]
+[ { composer_id: 2, composername: 'Van Heusen' } ]
+
+BACKUP DATABASE WORK 
+https://mxd.codes/articles/how-to-create-a-backup-script-for-postgre-sql-and-maria-db-containers-on-a-server
+
+How to update.
+
+update book set booktitle ='X&Y' where book_id = 3;
+
+mariadb -u username -p'password' -D database_name -e "UPDATE table_name SET column_name = 'new_value' WHERE id = 1;"
+
+mariadb -u sheetmusicuser -p -D sheetmusic -e "UPDATE backup SET last_backup = '2026-03-16 05:00:00.000'"
+
+

@@ -1,0 +1,23 @@
+{
+  "name": "music4kay",
+  "version": "1.0.0",
+  "description": "Sheetmusic finder",
+  "license": "ISC",
+  "author": "Mark",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "https": "^1.0.0",
+    "mariadb": "^3.5.1",
+    "path": "^0.12.7",
+    "serve-favicon": "^2.5.1"
+  }
+}
