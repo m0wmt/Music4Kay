@@ -2,7 +2,6 @@
 docs/
 backup/
 old/
-db.js
 
 # Lock file
 package-lock.json
